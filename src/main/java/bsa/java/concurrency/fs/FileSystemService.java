@@ -15,4 +15,8 @@ public class FileSystemService {
         return repository.saveFile(file, filename).get();
     }
 
+    @SneakyThrows
+    public void deleteFileByName(String filename) {
+        repository.deleteFileByName(filename);
+    }
 }

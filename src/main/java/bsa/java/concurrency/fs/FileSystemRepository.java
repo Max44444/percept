@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,6 +28,12 @@ public class FileSystemRepository implements FileSystem {
     @Override
     public CompletableFuture<String> saveFile(byte[] byteImage, String name) {
         return CompletableFuture.supplyAsync(() -> executeSaveToFile(byteImage, name));
+    }
+
+    @Override
+    public void deleteFileByName(String name) throws IOException {
+        var pathToFile = Path.of(rootDirectory.toString(), name);
+        Files.delete(pathToFile);
     }
 
     @SneakyThrows

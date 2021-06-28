@@ -62,4 +62,9 @@ public class ImageService {
 
         return images;
     }
+
+    void deleteImageById(UUID id) {
+        imageRepository.deleteById(id);
+        fileSystemService.deleteFileByName(id.toString() + ".png");
+    }
 }
