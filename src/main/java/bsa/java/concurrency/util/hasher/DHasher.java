@@ -9,7 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @Component
-public class DHasher {
+public class DHasher implements Hasher {
 
     private static final int IMAGE_WIDTH = 9;
     private static final int IMAGE_HEIGHT = 9;

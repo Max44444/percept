@@ -1,13 +1,18 @@
 package bsa.java.concurrency.image;
 
 import bsa.java.concurrency.fs.FileSystemService;
+import bsa.java.concurrency.image.dto.SearchResultDTO;
+import bsa.java.concurrency.image.model.Image;
+import bsa.java.concurrency.util.hasher.Hasher;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Log4j2
@@ -17,6 +22,12 @@ public class ImageService {
     @Autowired
     FileSystemService fileSystemService;
 
+    @Autowired
+    ImageRepository imageRepository;
+
+    @Autowired
+    Hasher hasher;
+
     public void uploadImages(MultipartFile[] files) {
         Arrays.stream(files).forEach(this::uploadImage);
     }
@@ -24,10 +35,31 @@ public class ImageService {
     @SneakyThrows
     private void uploadImage(MultipartFile file) {
         var byteImage = file.getBytes();
-        var filename = UUID.randomUUID().toString() ;
+        var id = UUID.randomUUID();
+        var filename = id + ".png";
+        var currentUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        fileSystemService.saveFile(byteImage, filename);
 
-        var pathToFile = fileSystemService.saveFile(byteImage, filename);
-        log.error(pathToFile);
+        var image = Image.builder()
+                .id(id)
+                .hash(hasher.calculateHash(byteImage))
+                .url(currentUrl + "/files/" + filename)
+                .build();
+
+        imageRepository.save(image);
     }
 
+    @SneakyThrows
+    public List<SearchResultDTO> searchMatches(MultipartFile file, double threshold) {
+        var byteImage = file.getBytes();
+        var hash = hasher.calculateHash(byteImage);
+        log.error(hash);
+        var images = imageRepository.matchSimilarImagesByHash(hash, threshold);
+
+        if (images.isEmpty()) {
+            uploadImage(file);
+        }
+
+        return images;
+    }
 }

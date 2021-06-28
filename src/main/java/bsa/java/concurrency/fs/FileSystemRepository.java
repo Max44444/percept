@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
+
 @Repository
 public class FileSystemRepository implements FileSystem {
 
@@ -30,7 +31,7 @@ public class FileSystemRepository implements FileSystem {
 
     @SneakyThrows
     private String executeSaveToFile(byte[] byteImage, String name) {
-        var pathToFile = Path.of(rootDirectory.toString(), name + ".png");
+        var pathToFile = Path.of(rootDirectory.toString(), name);
         return Files.write(pathToFile, byteImage).toString();
     }
 
