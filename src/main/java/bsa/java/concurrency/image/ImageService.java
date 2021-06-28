@@ -7,6 +7,7 @@ import bsa.java.concurrency.util.hasher.Hasher;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -38,7 +39,8 @@ public class ImageService {
         var id = UUID.randomUUID();
         var filename = id + ".png";
         var currentUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        fileSystemService.saveFile(byteImage, filename);
+        var path = fileSystemService.saveFile(byteImage, filename);
+        log.error(path);
 
         var image = Image.builder()
                 .id(id)

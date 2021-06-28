@@ -1,24 +1,20 @@
 package bsa.java.concurrency.fs;
 
-import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 
 @Repository
 public class FileSystemRepository implements FileSystem {
 
-    Path rootDirectory;
+    private final Path rootDirectory;
 
     @SneakyThrows
     public FileSystemRepository(@Value("${fs-root-directory}") String rootDirectory) {
