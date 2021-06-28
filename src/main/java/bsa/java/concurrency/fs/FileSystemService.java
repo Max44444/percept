@@ -19,4 +19,8 @@ public class FileSystemService {
     public void deleteFileByName(String filename) {
         repository.deleteFileByName(filename);
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

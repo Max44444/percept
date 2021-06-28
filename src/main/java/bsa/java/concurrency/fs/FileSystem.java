@@ -10,4 +10,6 @@ public interface FileSystem {
     CompletableFuture<String> saveFile(byte[] file, String filename) throws IOException;
 
     void deleteFileByName(String name) throws IOException;
+
+    void deleteAll();
 }

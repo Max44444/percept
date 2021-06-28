@@ -2,8 +2,10 @@ package bsa.java.concurrency.image;
 
 import bsa.java.concurrency.image.dto.SearchResultDTO;
 import bsa.java.concurrency.image.model.Image;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,4 +21,8 @@ public interface ImageRepository extends CrudRepository<Image, UUID> {
             "WHERE data.matchPercent >= :minMatchPercent")
     List<SearchResultDTO> matchSimilarImagesByHash(Long hash, Double minMatchPercent);
 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Image i WHERE i.id = :id")
+    void deleteByImageId(UUID id);
 }

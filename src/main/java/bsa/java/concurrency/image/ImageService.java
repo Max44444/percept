@@ -64,7 +64,12 @@ public class ImageService {
     }
 
     void deleteImageById(UUID id) {
-        imageRepository.deleteById(id);
+        imageRepository.deleteByImageId(id);
         fileSystemService.deleteFileByName(id.toString() + ".png");
+    }
+
+    public void deleteAllImages() {
+        imageRepository.deleteAll();
+        fileSystemService.deleteAll();
     }
 }
