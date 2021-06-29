@@ -1,5 +1,6 @@
 package bsa.java.concurrency.util.hasher;
 
+import bsa.java.concurrency.exeption.CannotCalculateCashException;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -14,9 +15,13 @@ public class DHasher implements Hasher {
     private static final int IMAGE_WIDTH = 9;
     private static final int IMAGE_HEIGHT = 9;
 
-    public long calculateHash(byte[] imageByteArray) throws IOException {
-        var image = ImageIO.read(new ByteArrayInputStream(imageByteArray));
-        return calculateHash(prepareImageForCalculateHash(image));
+    public long calculateHash(byte[] imageByteArray) {
+        try {
+            var image = ImageIO.read(new ByteArrayInputStream(imageByteArray));
+            return calculateHash(prepareImageForCalculateHash(image));
+        } catch (IOException e) {
+            throw new CannotCalculateCashException(e);
+        }
     }
 
     private BufferedImage prepareImageForCalculateHash(BufferedImage image) {
